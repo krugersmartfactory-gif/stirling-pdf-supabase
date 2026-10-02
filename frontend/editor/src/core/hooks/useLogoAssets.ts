@@ -1,25 +1,25 @@
 import { useMemo } from "react";
 import { BASE_PATH } from "@app/constants/app";
 
-const LOGO_FOLDER = "modern-logo";
-
 export function useLogoAssets() {
   return useMemo(() => {
-    const folderPath = `${BASE_PATH}/${LOGO_FOLDER}`;
+    const logoPath = `${BASE_PATH}/images/logo.png`;
+    const markPath = logoPath;
 
     return {
-      folderPath,
-      getAssetPath: (name: string) => `${folderPath}/${name}`,
+      folderPath: `${BASE_PATH}/images`,
+      getAssetPath: (name: string) =>
+        name.startsWith("mark-") ? markPath : logoPath,
       wordmark: {
-        black: `${folderPath}/StirlingPDFLogoBlackText.svg`,
-        grey: `${folderPath}/StirlingPDFLogoGreyText.svg`,
-        white: `${folderPath}/StirlingPDFLogoWhiteText.svg`,
+        black: logoPath,
+        grey: logoPath,
+        white: logoPath,
       },
-      tooltipLogo: `${folderPath}/logo-tooltip.svg`,
-      firstPage: `${folderPath}/Firstpage.png`,
-      favicon: `${folderPath}/favicon.ico`,
-      logo192: `${folderPath}/logo192.png`,
-      logo512: `${folderPath}/logo512.png`,
+      tooltipLogo: markPath,
+      firstPage: logoPath,
+      favicon: logoPath,
+      logo192: `${BASE_PATH}/images/logo192.png`,
+      logo512: `${BASE_PATH}/images/logo512.png`,
       manifestHref: `${BASE_PATH}/manifest.json`,
     };
   }, []);

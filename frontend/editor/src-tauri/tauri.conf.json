@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Stirling PDF",
-  "mainBinaryName": "Stirling-PDF",
+  "productName": "KRUGER PDF",
+  "mainBinaryName": "KRUGER-PDF",
   "version": "3.0.1",
   "identifier": "stirling.pdf.dev",
   "build": {

@@ -97,6 +97,8 @@ export class EditTextCommand implements Command {
   private overlaid = false;
   private prevObjPtr = 0;
   private prevFontId: string | null = null;
+  /** Original render mode, needed because OCR text is normally invisible. */
+  private prevRenderMode: number | null = null;
   /**
    * The original object's PDFium font handle, captured before the overlay
    * replaces it. Font handles are document-level and outlive the object, so
@@ -145,6 +147,8 @@ export class EditTextCommand implements Command {
     const run = page.findRun(this.runId);
     if (!run) return;
     if (this.prevText === null) this.prevText = run.text;
+    if (this.prevRenderMode === null) this.prevRenderMode = run.renderMode;
+    const isInvisibleOcr = run.renderMode === 3;
     // No-op edit: a contentEditable insert can fire several `input` events for
     // one keystroke burst, re-dispatching the SAME final text.
     if (this.prevText === this.nextText) return;
@@ -157,6 +161,7 @@ export class EditTextCommand implements Command {
     // PARAGRAPH-AWARE PARTIAL PATH: paragraphs (multi-line runs) keep per-line
     // sub-run data in `paragraphLineSlots`.
     if (
+      !isInvisibleOcr &&
       this.partialPlan === null &&
       this.paragraphPlan === null &&
       run.paragraphLineSlots.length > 1 &&
@@ -205,6 +210,7 @@ export class EditTextCommand implements Command {
 
     // PARAGRAPH LINE ADD/REMOVE PATH.
     if (
+      !isInvisibleOcr &&
       this.partialPlan === null &&
       this.paragraphPlan === null &&
       this.lineEdit === null &&
@@ -242,6 +248,7 @@ export class EditTextCommand implements Command {
 
     // SURGICAL DIFF PATH (single-line).
     if (
+      !isInvisibleOcr &&
       this.partialPlan === null &&
       run.mergedFromPtrs.length > 0 &&
       run.paragraphLineSlots.length < 2 &&
@@ -290,6 +297,7 @@ export class EditTextCommand implements Command {
       /\r?\n/.test(this.nextText) ||
       /\s\s/.test(this.nextText);
     const needsOverlay =
+      isInvisibleOcr ||
       needsMultiObjectEmit ||
       (!this.overlaid &&
         !alreadyBase14 &&
@@ -352,7 +360,12 @@ export class EditTextCommand implements Command {
       run.mergedFromTexts.length === borrowPtrs.length
         ? run.mergedFromTexts
         : borrowPtrs.map(() => run.text);
-    const originalFontPtr = canReuseFont
+    // OCR text layers are commonly emitted with subset fonts whose glyph
+    // mappings are only intended for the invisible recognition layer. Reusing
+    // that face when making OCR visible can render ordinary Latin text as
+    // unrelated glyphs, even when the extracted Unicode string is correct.
+    // Emit edited OCR text through the normal fallback font path instead.
+    const originalFontPtr = canReuseFont && !isInvisibleOcr
       ? bestFontPtrForText(m, borrowPtrs, borrowTexts, this.nextText) ||
         (run.pdfiumObjPtr ? safeGetFont(m, run.pdfiumObjPtr) : 0)
       : 0;
@@ -386,13 +399,27 @@ export class EditTextCommand implements Command {
 
     // Only stamp a cover rect when the sampler is CONFIDENT it found a uniform
     // background colour.
-    if (!allRemoved && bg.confident) {
-      this.coverRectPtr = emitFillRect(m, page, run.bounds, bg.fill);
+    if ((!allRemoved || isInvisibleOcr) && bg.confident) {
+      const coverMargin = isInvisibleOcr
+        ? Math.max(2.5, run.fontSize * 0.35)
+        : 1.5;
+      this.coverRectPtr = emitFillRect(
+        m,
+        page,
+        run.bounds,
+        bg.fill,
+        coverMargin,
+      );
       if (this.coverRectPtr) {
         this.createdPtrs.push(this.coverRectPtr);
         run.coverRectPtr = this.coverRectPtr;
       }
     }
+
+    // OCR text sits invisibly over the scanned page image. Re-emitted edited
+    // text must become visible while the original render mode remains
+    // available for undo (captured above).
+    if (isInvisibleOcr) run.renderMode = 0;
 
     const outputLines = this.nextText.split(/\r?\n/);
     const lineHeight =
@@ -776,6 +803,7 @@ export class EditTextCommand implements Command {
     // PDFium has no insert-into-form-xobject API, so the truly-original
     // pointers (if they lived in a form) are gone forever.
     const revertFallback = fallbackFamilyFor(this.prevFontId ?? "");
+    if (this.prevRenderMode !== null) run.renderMode = this.prevRenderMode;
     const lineAnchorPtrs: number[] = [];
     const allRestoredPtrs: number[] = [];
     for (const line of this.revertLines) {

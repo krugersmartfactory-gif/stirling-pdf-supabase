@@ -76,6 +76,42 @@ function compressStaticCopyPlugin(): PluginOption {
   };
 }
 
+/** Serve the KRUGER logo files from the backend's static image directory in dev. */
+function serveKrugerBrandingAssets(): PluginOption {
+  const logoFiles = new Set([
+    "logo.png",
+    "logo192.png",
+    "logo512.png",
+  ]);
+  const imageDir = path.resolve(
+    __dirname,
+    "../../app/core/src/main/resources/static/images",
+  );
+
+  return {
+    name: "serve-kruger-branding-assets",
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        const pathname = req.url?.split("?")[0] ?? "";
+        const filename = pathname.startsWith("/images/")
+          ? pathname.slice("/images/".length)
+          : "";
+        if (!logoFiles.has(filename)) return next();
+
+        void fs
+          .readFile(path.join(imageDir, filename))
+          .then((image) => {
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "image/png");
+            res.setHeader("Cache-Control", "no-store");
+            res.end(image);
+          })
+          .catch(next);
+      });
+    },
+  };
+}
+
 // Bake per-route Open Graph / Twitter Card tags into static HTML at build time.
 //
 // The SPA sets these client-side for real browsers, but link-unfurling crawlers
@@ -301,6 +337,7 @@ export default defineConfig(async ({ mode, command }) => {
           "/login/saml2": backendProxy,
           "/swagger-ui": backendProxy,
           "/v1/api-docs": backendProxy,
+          "/images": backendProxy,
         };
 
   return {
@@ -322,6 +359,7 @@ export default defineConfig(async ({ mode, command }) => {
       __DEV_WORKTREE_LABEL__: JSON.stringify(devWorktreeLabel),
     },
     plugins: [
+      serveKrugerBrandingAssets(),
       iconSvgr(),
       react(),
       ...(runSubpath ? [subpathBareRedirectPlugin(runSubpath)] : []),
@@ -380,11 +418,16 @@ export default defineConfig(async ({ mode, command }) => {
             dest: "pdfjs/standard_fonts",
           },
           {
-            // Brand assets live in core; the editor serves them by URL, so
-            // copy the set to the /modern-logo path its manifest, index.html
-            // and useLogoAssets resolve against.
-            src: "src/core/assets/brand/modern-logo/*",
-            dest: "modern-logo",
+            src: "../../app/core/src/main/resources/static/images/logo.png",
+            dest: "images",
+          },
+          {
+            src: "../../app/core/src/main/resources/static/images/logo192.png",
+            dest: "images",
+          },
+          {
+            src: "../../app/core/src/main/resources/static/images/logo512.png",
+            dest: "images",
           },
           {
             // Fallback TrueType fonts for PDFium (Noto Sans, CJK, Arabic, etc.)

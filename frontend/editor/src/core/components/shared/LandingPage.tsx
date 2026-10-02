@@ -5,7 +5,6 @@ import { useFileHandler } from "@app/hooks/useFileHandler";
 import { useFileActionTerminology } from "@app/hooks/useFileActionTerminology";
 import MobileUploadModal from "@app/components/shared/MobileUploadModal";
 import { openFilesFromDisk } from "@app/services/openFilesFromDisk";
-import { Logo } from "@app/ui/Logo";
 import { LandingActions } from "@app/components/shared/LandingActions";
 import { useDropzoneFiles } from "@app/hooks/useDropzoneFiles";
 import "@app/components/shared/LandingPage.css";
@@ -79,15 +78,19 @@ const LandingPage = () => {
           },
         }}
       >
-        <Logo
-          variant="iconAndText"
-          orientation="vertical"
-          iconHeight="5rem"
-          textHeight="2.5rem"
-          gap="1rem"
+        <div
           className="landing-logo-enter"
-          style={{ marginBottom: "2.5rem" }}
-        />
+          aria-label="KRUGER PDF"
+          style={{
+            marginBottom: "2.5rem",
+            color: "var(--c-text)",
+            fontSize: "2.5rem",
+            fontWeight: 700,
+            lineHeight: 1,
+          }}
+        >
+          KRUGER PDF
+        </div>
 
         <div className="landing-actions-enter">
           <LandingActions

@@ -14,7 +14,6 @@ import { useMediaQuery, useViewportSize } from "@mantine/hooks";
 import { Button as DSButton } from "@app/ui/Button";
 import { useTranslation } from "react-i18next";
 import { LogoIcon } from "@app/components/shared/LogoIcon";
-import { Wordmark } from "@app/components/shared/Wordmark";
 import { Icon } from "@app/ui/Icon";
 import {
   loadJscanify,
@@ -997,10 +996,9 @@ export default function MobileScannerPage() {
         >
           <Group gap="sm" align="center" wrap="nowrap">
             <LogoIcon
-              alt={t("home.mobile.brandAlt", "Stirling PDF logo")}
+              alt="KRUGER PDF"
               style={{ height: FLUID.logo, width: FLUID.logo }}
             />
-            <Wordmark alt="Stirling PDF" style={{ height: FLUID.wordmark }} />
           </Group>
         </Box>
       )}

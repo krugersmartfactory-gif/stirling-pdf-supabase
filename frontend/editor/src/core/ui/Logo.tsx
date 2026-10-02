@@ -1,10 +1,8 @@
 import type { CSSProperties } from "react";
-import markUrl from "@app/assets/brand/branding-logo/logo-mark.svg";
-import wordmarkLightUrl from "@app/assets/brand/branding-logo/wordmark-light.svg";
-import wordmarkDarkUrl from "@app/assets/brand/branding-logo/wordmark-dark.svg";
+import { BASE_PATH } from "@app/constants/app";
 import "@app/ui/Logo.css";
 
-/** iconOnly = mark; textOnly = "Stirling" wordmark; iconAndText = both. */
+/** Layout-compatible KRUGER logo used in the shared application chrome. */
 export type LogoVariant = "iconOnly" | "iconAndText" | "textOnly";
 
 interface LogoProps {
@@ -23,10 +21,7 @@ interface LogoProps {
 }
 
 /**
- * Shared brand lockup used across editor + processor. The mark is theme-
- * agnostic; the wordmark swaps light/dark via CSS so it tracks the active
- * colour scheme in both the editor (data-mantine-color-scheme) and the portal
- * (data-theme).
+ * Shared KRUGER logo used across the editor and processor.
  */
 export function Logo({
   variant = "iconAndText",
@@ -36,11 +31,8 @@ export function Logo({
   gap = "0.5rem",
   className,
   style,
-  alt = "Stirling",
+  alt = "KRUGER PDF",
 }: LogoProps) {
-  const showIcon = variant === "iconOnly" || variant === "iconAndText";
-  const showText = variant === "textOnly" || variant === "iconAndText";
-
   const cls = [
     "sui-logo",
     orientation === "vertical" ? "sui-logo--vertical" : "",
@@ -57,33 +49,38 @@ export function Logo({
     gap,
   };
 
+  const height =
+    variant === "textOnly"
+      ? textHeight
+      : orientation === "vertical" && variant === "iconAndText"
+        ? `calc(${iconHeight} + ${textHeight} + ${gap})`
+        : iconHeight;
+  if (variant === "textOnly") {
+    return (
+      <span className={cls} style={{ ...layoutStyle, ...style }}>
+        <span
+          className="sui-logo__wordmark"
+          style={{
+            color: "var(--c-text)",
+            fontSize: textHeight,
+            fontWeight: 700,
+            lineHeight: 1,
+          }}
+        >
+          KRUGER
+        </span>
+      </span>
+    );
+  }
+
   return (
     <span className={cls} style={{ ...layoutStyle, ...style }}>
-      {showIcon && (
-        <img
-          className="sui-logo__mark"
-          src={markUrl}
-          alt={showText ? "" : alt}
-          aria-hidden={showText ? true : undefined}
-          style={{ height: iconHeight }}
-        />
-      )}
-      {showText && (
-        <>
-          <img
-            className="sui-logo__wordmark sui-logo__wordmark--light"
-            src={wordmarkLightUrl}
-            alt={alt}
-            style={{ height: textHeight }}
-          />
-          <img
-            className="sui-logo__wordmark sui-logo__wordmark--dark"
-            src={wordmarkDarkUrl}
-            alt={alt}
-            style={{ height: textHeight }}
-          />
-        </>
-      )}
+      <img
+        className="sui-logo__mark"
+        src={`${BASE_PATH}/images/logo.png`}
+        alt={alt}
+        style={{ height, width: "auto", objectFit: "contain" }}
+      />
     </span>
   );
 }

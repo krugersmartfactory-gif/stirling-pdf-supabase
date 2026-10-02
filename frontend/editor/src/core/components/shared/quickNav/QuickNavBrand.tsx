@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import { useTranslation } from "react-i18next";
 import { Tooltip } from "@app/components/shared/Tooltip";
 import { BrandMark } from "@app/components/shared/BrandMark";
 import { useQuickNavHost } from "@app/contexts/QuickNavHostContext";
@@ -11,8 +10,7 @@ export interface QuickNavBrandProps {
 }
 
 export function QuickNavBrand({ onReturnHome }: QuickNavBrandProps) {
-  const { t } = useTranslation();
-  const label = t("quickNav.home", "Stirling");
+  const label = "KRUGER PDF";
   const host = useQuickNavHost();
 
   // Nothing happens where the app has not offered the action.

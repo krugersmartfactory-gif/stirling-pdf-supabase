@@ -5,6 +5,7 @@ import { Button } from "@app/ui/Button";
 import { EditorFileSwitcher } from "@app/tools/pdfTextEditor/components/EditorFileSwitcher";
 import type { FileId } from "@app/types/file";
 import { modShortcut } from "@app/utils/hotkeys";
+import LanguagePicker from "@app/components/tools/ocr/LanguagePicker";
 
 interface Props {
   compact: boolean;
@@ -16,6 +17,10 @@ interface Props {
   onDownload: () => void;
   onOpenFind: () => void;
   onShowHelp: () => void;
+  ocrLanguages: string[];
+  onOcrLanguagesChange: (languages: string[]) => void;
+  onOcr: () => void;
+  ocrLoading: boolean;
 }
 
 export function EditorPanelActions({
@@ -28,6 +33,10 @@ export function EditorPanelActions({
   onDownload,
   onOpenFind,
   onShowHelp,
+  ocrLanguages,
+  onOcrLanguagesChange,
+  onOcr,
+  ocrLoading,
 }: Props) {
   const { t } = useTranslation();
   return (
@@ -53,7 +62,28 @@ export function EditorPanelActions({
           />
         </Group>
       )}
-      <Group gap="xs" wrap="nowrap">
+      <Group gap="xs" wrap="wrap">
+        <div style={{ flex: "1 1 190px", minWidth: 0 }}>
+          <LanguagePicker
+            value={ocrLanguages}
+            onChange={onOcrLanguagesChange}
+            placeholder={t("ocr.languagePicker.selectLanguages", "OCR languages")}
+            disabled={ocrLoading}
+            autoFillFromBrowserLanguage
+          />
+        </div>
+        <Button
+          size="sm"
+          variant="secondary"
+          accent="neutral"
+          onClick={onOcr}
+          loading={ocrLoading}
+          disabled={ocrLanguages.length === 0}
+          data-testid="pdf-editor-ocr"
+          leftSection={<Icon name="scan-text" size={18} />}
+        >
+          {t("pdfTextEditor.ocrScannedPdf", "OCR scanned PDF")}
+        </Button>
         <Tooltip
           label={t("pdfTextEditor.saveTooltip", {
             defaultValue:

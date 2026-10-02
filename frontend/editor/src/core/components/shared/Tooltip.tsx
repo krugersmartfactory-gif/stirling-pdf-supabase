@@ -72,7 +72,7 @@ function TooltipHeader({
         {header.logo || (
           <img
             src={tooltipLogo}
-            alt="Stirling PDF"
+            alt="KRUGER PDF"
             style={{ width: "1.4rem", height: "1.4rem", display: "block" }}
           />
         )}

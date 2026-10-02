@@ -1,5 +1,4 @@
 import React from "react";
-import { useMantineColorScheme } from "@mantine/core";
 import { useLogoAssets } from "@app/hooks/useLogoAssets";
 
 interface WordmarkProps extends React.ImgHTMLAttributes<HTMLImageElement> {
@@ -7,14 +6,11 @@ interface WordmarkProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   muted?: boolean;
 }
 
-export function Wordmark({ alt = "", muted = false, ...props }: WordmarkProps) {
-  const { colorScheme } = useMantineColorScheme();
-  const isDark = colorScheme === "dark";
+export function Wordmark({
+  alt = "KRUGER PDF",
+  muted: _muted,
+  ...props
+}: WordmarkProps) {
   const { wordmark } = useLogoAssets();
-
-  // light: black text (standard) or grey text (muted)
-  // dark:  white text for both variants
-  const src = isDark ? wordmark.white : muted ? wordmark.grey : wordmark.black;
-
-  return <img src={src} alt={alt} {...props} />;
+  return <img src={wordmark.black} alt={alt} {...props} />;
 }

@@ -1,15 +1,15 @@
 import { useMemo } from "react";
 import { useLogoAssets } from "@app/hooks/useLogoAssets";
 
-/** Theme-specific no-text logo SVG URLs under the `modern-logo` folder. */
+/** KRUGER mark URLs used in icon-only brand placements. */
 export function useLogoPath(): { dark: string; light: string } {
-  const { folderPath } = useLogoAssets();
+  const { getAssetPath } = useLogoAssets();
 
   return useMemo(
     () => ({
-      dark: `${folderPath}/StirlingPDFLogoNoTextDark.svg`,
-      light: `${folderPath}/StirlingPDFLogoNoTextLight.svg`,
+      dark: getAssetPath("mark-dark"),
+      light: getAssetPath("mark-light"),
     }),
-    [folderPath],
+    [getAssetPath],
   );
 }

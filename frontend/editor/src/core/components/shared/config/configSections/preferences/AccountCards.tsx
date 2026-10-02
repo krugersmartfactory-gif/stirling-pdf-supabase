@@ -69,7 +69,7 @@ export function AccountCards() {
     (value: string) => value.replace(/\D/g, "").slice(0, 6),
     [],
   );
-  const qrLogoSrc = `${BASE_PATH}/modern-logo/StirlingPDFLogoNoTextDark.svg`;
+  const qrLogoSrc = `${BASE_PATH}/images/logo.png`;
 
   const authTypeFromMetadata = useMemo(() => {
     const metadata = (user as { app_metadata?: unknown } | null)?.app_metadata;

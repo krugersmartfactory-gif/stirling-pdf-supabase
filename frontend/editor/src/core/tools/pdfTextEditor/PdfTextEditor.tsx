@@ -7,6 +7,12 @@ import { Alert, Stack, Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { Icon } from "@app/ui/Icon";
 import { downloadFile } from "@app/services/downloadService";
+import apiClient from "@app/services/apiClient";
+import {
+  buildOCRFormData,
+  ocrResponseHandler,
+} from "@app/hooks/tools/ocr/useOCROperation";
+import { defaultParameters as defaultOCRParameters } from "@app/hooks/tools/ocr/useOCRParameters";
 import { useFileContext, useFileSelection } from "@app/contexts/FileContext";
 import { createStirlingFilesAndStubs } from "@app/services/fileStubHelpers";
 import type { FileId } from "@app/types/file";
@@ -68,6 +74,8 @@ export default function PdfTextEditor(_props: BaseToolProps) {
     store.selection.value,
   );
   const [openedFileName, setOpenedFileName] = useState<string | null>(null);
+  const [ocrLanguages, setOcrLanguages] = useState<string[]>([]);
+  const [ocrLoading, setOcrLoading] = useState(false);
   // Set only when the document came from the workbench; a drag-dropped
   // file has no fileId and can only be downloaded. Mirrored into state so the
   // sidebar's file switcher can mark which workbench file is open.
@@ -236,6 +244,59 @@ export default function PdfTextEditor(_props: BaseToolProps) {
 
   const handleSave = useCallback(() => void runSave(false), [runSave]);
   const handleDownload = useCallback(() => void runSave(true), [runSave]);
+
+  const handleOcrScannedPdf = useCallback(async () => {
+    const doc = store.document;
+    if (!doc || ocrLoading || ocrLanguages.length === 0) return;
+    setOcrLoading(true);
+    store.setError(null);
+    try {
+      // OCR the current in-memory document, including any changes already made.
+      const { blob, filename } = await exportToBlob(doc, openedFileName);
+      const input = new File([blob], filename, { type: "application/pdf" });
+      const parameters = {
+        ...defaultOCRParameters,
+        languages: ocrLanguages,
+        ocrType: "skip-text",
+        ocrRenderType: "hocr",
+      };
+      const formData = buildOCRFormData(parameters, input);
+      const response = await apiClient.post<Blob>(
+        "/api/v1/misc/ocr-pdf",
+        formData,
+        { responseType: "blob" },
+      );
+      const [ocrFile] = await ocrResponseHandler(
+        response.data,
+        [input],
+        async () => [],
+      );
+      if (!ocrFile) throw new Error("OCR did not return a PDF file.");
+
+      // Keep the OCR result as a new editor document. The scanned source is not
+      // replaced until the user explicitly saves the edited output.
+      setOpenedFileName(ocrFile.name);
+      setSourceFile(null);
+      adoptFile(ocrFile);
+      pinWorkbench();
+      await load(ocrFile);
+    } catch (err) {
+      store.setError(
+        err instanceof Error ? err.message : String(err),
+      );
+    } finally {
+      setOcrLoading(false);
+    }
+  }, [
+    store,
+    ocrLoading,
+    ocrLanguages,
+    openedFileName,
+    setSourceFile,
+    adoptFile,
+    pinWorkbench,
+    load,
+  ]);
 
   const handleConfirmSaveRisk = useCallback(() => {
     const doc = store.document;
@@ -674,6 +735,10 @@ export default function PdfTextEditor(_props: BaseToolProps) {
             store.setFindOpen(true);
           }}
           onShowHelp={() => store.setHelpOpen(true)}
+          ocrLanguages={ocrLanguages}
+          onOcrLanguagesChange={setOcrLanguages}
+          onOcr={handleOcrScannedPdf}
+          ocrLoading={ocrLoading}
         />
       )}
     </Stack>

@@ -5,7 +5,7 @@ import { ActionIcon } from "@app/ui/ActionIcon";
 import { Button, type ButtonAccent } from "@app/ui/Button";
 import { Icon } from "@app/ui/Icon";
 import { Z_INDEX_ONBOARDING_CARD } from "@app/styles/zIndex";
-import stirlingMark from "@app/assets/brand/modern-logo/logo512.png";
+import { BASE_PATH } from "@app/constants/app";
 import styles from "@app/components/onboarding/InitialOnboardingModal/InitialOnboardingModal.module.css";
 
 /** A footer button. `action` is an opaque string handled by the caller. */
@@ -48,7 +48,7 @@ export interface OnboardingSlideShellProps {
 }
 
 /**
- * Hero art for the inset panel. `appIcon` renders the Stirling app mark
+ * Hero art for the inset panel. `appIcon` renders the KRUGER app mark
  * directly; otherwise the children glyph sits inside a soft white tile.
  */
 export function ShellHero({
@@ -60,7 +60,11 @@ export function ShellHero({
 }) {
   if (appIcon) {
     return (
-      <img src={stirlingMark} alt="Stirling" className={styles.heroAppIcon} />
+      <img
+        src={`${BASE_PATH}/images/logo.png`}
+        alt="KRUGER PDF"
+        className={styles.heroAppIcon}
+      />
     );
   }
   return <div className={styles.heroTile}>{children}</div>;
@@ -145,12 +149,12 @@ export default function OnboardingSlideShell({
             <header className={styles.header}>
               <div className={styles.brand}>
                 <img
-                  src={stirlingMark}
+                  src={`${BASE_PATH}/images/logo.png`}
                   alt=""
                   aria-hidden="true"
                   className={styles.brandLogo}
                 />
-                <span className={styles.wordmark}>Stirling</span>
+                <span className={styles.wordmark}>KRUGER PDF</span>
               </div>
               <div className={styles.headerRight}>
                 {showProgress && (

@@ -626,7 +626,8 @@ export function TextRunOverlay({
   const flowLeft = anchor.x * scale;
 
   const invisible = run.renderMode === RENDER_MODE_INVISIBLE;
-  const showsGlyphs = (dragging || stalled) && !invisible;
+  const showsGlyphs =
+    (dragging || stalled || focused) && (!invisible || focused || touched);
 
   const singleLine = (run.paragraphLineCount ?? 1) <= 1;
   const fit =
