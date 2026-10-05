@@ -1,1 +1,0 @@
-import{n}from"./vendor-ui-BsolqwEs.js";import{b as t,f as a,q as s}from"./index-PPcdKNkF.js";const f={analyticsEnabled:!1};function i(){const{data:e,isPending:r,error:o}=n({queryKey:s.footerInfo(),queryFn:a,staleTime:t});return{footerInfo:e??(o?f:null),loading:r,error:o??null}}export{i as u};

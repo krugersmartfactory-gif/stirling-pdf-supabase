@@ -1,1 +1,0 @@
-const s=100,R=5;const _=[100,200,300,400];function S(E){return Math.max(1,E)*100}function t(E){return Math.max(1,Math.ceil(Math.max(0,E)/100))}function a(E){return E>=5||S(E)>=1e3}export{R as S,s as U,_ as a,t as b,a as s,S as u};
