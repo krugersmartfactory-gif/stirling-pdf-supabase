@@ -17,6 +17,10 @@ local.properties
 version.properties
 
 #### Stirling-PDF Files ###
+# Desktop app build artifacts (large, generated)
+frontend/editor/src-tauri/dist/
+frontend/editor/dist/
+
 pipeline/
 !pipeline/.gitkeep
 # The rule above also matches these Java source packages; without these a new file there is
