@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+    <base href="/" />
+    <link rel="icon" href="images/logo.png" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="A free, private PDF editor you can run on any infrastructure." />
+    <link rel="apple-touch-icon" href="images/logo.png" />
+    <link rel="manifest" href="manifest.json" />
+
+    <title>Hotkeys Settings - Stirling PDF</title>
+
+    <!-- Apply theme before first paint (no FOUC); mirrors ThemeProvider, which then refines it. -->
+    <script>
+      (function () {
+        try {
+          var p = JSON.parse(
+            localStorage.getItem("stirlingpdf_preferences") || "{}",
+          );
+          var mode = p.theme || "system";
+          var scheme =
+            mode === "light"
+              ? "light"
+              : mode === "dark"
+                ? "dark"
+                : window.matchMedia &&
+                    window.matchMedia("(prefers-color-scheme: dark)").matches
+                  ? "dark"
+                  : "light";
+          var r = document.documentElement;
+          r.setAttribute("data-theme", scheme);
+          r.setAttribute("data-app-theme", "custom");
+          r.setAttribute("data-accent", "default");
+          r.setAttribute("data-mantine-color-scheme", scheme);
+        } catch (e) {
+          /* first visit / unavailable storage: ThemeProvider handles it */
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="./assets/index-PPcdKNkF.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/index-PPcdKNkF.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-i18n-Duaa3CPZ.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-ui-BsolqwEs.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-embedpdf-CWtH0tIE.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-zip-DrJ2Fy40.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-pdfjs-qeL0KTy0.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-posthog-BTegTnBq.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-supabase-C1om6RE8.js">
+    <link rel="stylesheet" crossorigin href="./assets/vendor-ui-DZ2mVAw8.css">
+    <link rel="stylesheet" crossorigin href="./assets/index-DHp5ICVM.css">
+    <!-- og:start -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Stirling PDF" />
+    <meta property="og:title" content="Hotkeys Settings - Stirling PDF" />
+    <meta property="og:description" content="A free, private PDF editor you can run on any infrastructure." />
+    <meta property="og:image" content="/og_images/home.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Hotkeys Settings - Stirling PDF" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Hotkeys Settings - Stirling PDF" />
+    <meta name="twitter:description" content="A free, private PDF editor you can run on any infrastructure." />
+    <meta name="twitter:image" content="/og_images/home.png" />
+    <!-- og:end -->
+    <meta name="robots" content="noindex, follow" />
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>

@@ -1,0 +1,1 @@
+import{j as u}from"./vendor-ui-BsolqwEs.js";import"./index-PPcdKNkF.js";function d({accent:a,padding:r="default",interactive:i=!1,className:s,children:e,...t}){return u.jsx("div",{...t,className:["sui-surface","sui-card",`sui-card--pad-${r}`,a?`sui-card--accent-${a}`:"",i?"sui-card--interactive":"",s??""].filter(Boolean).join(" "),children:e})}export{d as C};

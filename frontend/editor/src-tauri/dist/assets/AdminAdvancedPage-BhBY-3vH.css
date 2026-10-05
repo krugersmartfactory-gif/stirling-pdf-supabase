@@ -1,0 +1,1 @@
+.admin-advanced__card{display:flex;flex-direction:column;gap:var(--space-3, .75rem)}.admin-advanced__heading{margin:0;scroll-margin-top:1rem;font-size:.9375rem;font-weight:var(--font-weight-semibold, 600);color:var(--c-text)}.admin-advanced__description{margin:-.35rem 0 0;font-size:.8125rem;color:var(--c-text-subtle)}

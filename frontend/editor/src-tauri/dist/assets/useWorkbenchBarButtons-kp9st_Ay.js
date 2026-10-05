@@ -1,0 +1,1 @@
+import{r as s}from"./vendor-ui-BsolqwEs.js";import{X as f}from"./index-PPcdKNkF.js";function u(r){const{registerButtons:c,unregisterButtons:i,setAction:n}=f(),a=s.useMemo(()=>r.map(({onClick:e,...o})=>o),[r]),t=s.useMemo(()=>r.map(e=>e.id),[r]);s.useEffect(()=>{if(!(!r||r.length===0))return c(a),r.forEach(({id:e,onClick:o})=>n(e,o)),()=>i(t)},[c,i,n,a,t,r])}export{u};

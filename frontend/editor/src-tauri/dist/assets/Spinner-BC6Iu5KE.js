@@ -1,0 +1,1 @@
+import{j as n}from"./vendor-ui-BsolqwEs.js";import"./index-PPcdKNkF.js";function t({size:r="md",label:s,className:i}){return n.jsx("span",{role:"status","aria-label":s,"aria-busy":"true",className:["sui-spinner",`sui-spinner--${r}`,i??""].filter(Boolean).join(" ")})}export{t as S};

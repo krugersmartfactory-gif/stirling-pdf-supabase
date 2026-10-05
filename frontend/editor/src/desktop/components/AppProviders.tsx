@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { AppProviders as CoreAppProviders } from "@core/components/AppProviders";
+import { AppProviders as ProprietaryAppProviders } from "@proprietary/components/AppProviders";
 import { DesktopConfigSync } from "@app/components/DesktopConfigSync";
 import { DesktopQueryCacheReset } from "@app/components/DesktopQueryCacheReset";
 import { DesktopBannerInitializer } from "@app/components/DesktopBannerInitializer";
@@ -31,8 +32,8 @@ const COMMON_TOOL_ENDPOINTS = [
 
 /**
  * Desktop application providers
- * Hardcoded LOCAL mode only: no SaaS, no auth switching, no connection-mode logic.
- * Wraps CoreAppProviders with desktop-specific initialization.
+ * Uses ProprietaryAppProviders for SaaS mode with Supabase authentication.
+ * Wraps with desktop-specific initialization.
  */
 export function AppProviders({ children }: { children: ReactNode }) {
   const [backendReady, setBackendReady] = useState(false);
@@ -49,40 +50,21 @@ export function AppProviders({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  // Start backend on mount and wait until healthy
+  // Start backend on mount (non-blocking fire-and-forget)
   useEffect(() => {
-    const startBackend = async () => {
+    setBackendReady(true);
+
+    // Start backend in background, don't block on it
+    const startBackendAsync = async () => {
       try {
         await tauriBackendService.startBackend();
-        // Subscribe to status and wait for healthy
-        const unsubscribe = tauriBackendService.subscribeToStatus(
-          (status) => {
-            if (status === "healthy") {
-              setBackendReady(true);
-              unsubscribe();
-            }
-          },
-        );
-        // Set a timeout to avoid infinite loading if backend fails
-        const timeout = setTimeout(() => {
-          console.error(
-            "[AppProviders] Backend did not become healthy within timeout",
-          );
-          setBackendReady(true);
-          unsubscribe();
-        }, 15000);
-        return () => clearTimeout(timeout);
+        console.debug("[AppProviders] Backend startup complete");
       } catch (err) {
         console.error("[AppProviders] Failed to start backend:", err);
-        // Always mark ready to avoid infinite loading, even if startup failed
-        setBackendReady(true);
       }
     };
 
-    const cleanup = startBackend();
-    return () => {
-      cleanup.then((c) => c?.());
-    };
+    startBackendAsync();
   }, []);
 
   // Preload endpoint availability once backend is healthy
@@ -209,17 +191,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
   }
 
   return (
-    <CoreAppProviders
-      appConfigRetryOptions={{
-        maxRetries: 5,
-        initialDelay: 1000,
-      }}
-      appConfigProviderProps={{
-        initialConfig: DESKTOP_DEFAULT_APP_CONFIG,
-        bootstrapMode: "blocking",
-        autoFetch: true,
-      }}
-    >
+    <ProprietaryAppProviders>
       <DesktopQueryCacheReset />
       <DesktopConfigSync />
       <DesktopBannerInitializer />
@@ -229,6 +201,6 @@ export function AppProviders({ children }: { children: ReactNode }) {
       {children}
       <DesktopOnboardingModal />
       {updatePopupModal}
-    </CoreAppProviders>
+    </ProprietaryAppProviders>
   );
 }

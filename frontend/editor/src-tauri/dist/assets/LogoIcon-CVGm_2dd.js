@@ -1,0 +1,1 @@
+import{r,j as a}from"./vendor-ui-BsolqwEs.js";import{u as e}from"./index-PPcdKNkF.js";function n(){const{getAssetPath:t}=e();return r.useMemo(()=>({dark:t("mark-dark"),light:t("mark-light")}),[t])}function m({alt:t="KRUGER PDF",...o}){const s=n();return a.jsx("img",{src:s.light,alt:t,...o})}export{m as L};

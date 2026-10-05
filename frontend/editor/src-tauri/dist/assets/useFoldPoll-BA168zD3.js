@@ -1,0 +1,1 @@
+import{r as u}from"./vendor-ui-BsolqwEs.js";function f(e,r,n){const o=u.useRef(0),s=u.useRef(n);s.current=n,u.useEffect(()=>{e===void 0||!r||r!==o.current&&(o.current=r,s.current(e))},[e,r])}export{f as u};

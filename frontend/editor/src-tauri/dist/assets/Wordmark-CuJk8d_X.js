@@ -1,0 +1,1 @@
+import{j as t}from"./vendor-ui-BsolqwEs.js";import{u as m}from"./index-PPcdKNkF.js";function i({alt:r="KRUGER PDF",muted:e,...o}){const{wordmark:s}=m();return t.jsx("img",{src:s.black,alt:r,...o})}export{i as W};

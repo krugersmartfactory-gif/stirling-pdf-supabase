@@ -5,7 +5,7 @@
   "version": "3.0.1",
   "identifier": "stirling.pdf.dev",
   "build": {
-    "frontendDist": "../dist",
+    "frontendDist": "./dist",
     "devUrl": "http://localhost:5173",
     "beforeDevCommand": "npx vite --mode desktop",
     "beforeBuildCommand": "npx vite build --mode desktop"
@@ -23,7 +23,7 @@
       "icons/macos/app.icns",
       "icons/macos/app-512.png"
     ],
-    "resources": ["libs/*.jar", "runtime/jre/**/*"],
+    "resources": ["libs/*.jar", "runtime/jre/**/*", "../dist/**/*"],
     "fileAssociations": [
       {
         "ext": ["pdf"],

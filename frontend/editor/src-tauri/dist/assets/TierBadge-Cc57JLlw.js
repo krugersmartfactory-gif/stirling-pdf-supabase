@@ -1,0 +1,1 @@
+import{u as a,J as n,j as i,K as o}from"./vendor-ui-BsolqwEs.js";function c({tier:e}){const{t:s}=a(),t=n();return i.jsx(o,{component:"span",color:"grape",size:"sm",style:{cursor:"pointer"},onClick:()=>t("/settings/adminPlan"),title:s("admin.settings.badge.clickToUpgrade","Click to view plan details"),children:e})}export{c as T};

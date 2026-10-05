@@ -1,0 +1,1 @@
+import{j as r}from"./vendor-ui-BsolqwEs.js";const p=({children:s,className:t="",style:n,...e})=>{const o=`ph-no-capture${t?` ${t}`:""}`,a={display:"contents",...n};return r.jsx("span",{className:o,style:a,...e,children:s})};export{p as P};

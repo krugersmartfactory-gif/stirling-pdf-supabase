@@ -1,0 +1,1 @@
+import{j as r,F as p}from"./vendor-ui-BsolqwEs.js";import{B as F}from"./index-PPcdKNkF.js";function f({onChange:o,accept:i,multiple:n,resetRef:s,name:e,capture:m,disabled:t,children:u,...x}){return r.jsx(p,{onChange:o,accept:i,multiple:n,resetRef:s,name:e,capture:m,disabled:t,children:j=>r.jsx(F,{...x,...j,disabled:t,children:u})})}export{f as F};
