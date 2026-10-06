@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm install && npm install -g @go-task/cli && task frontend:build",
+  "buildCommand": "npm install && npm install -g @go-task/cli && cd frontend && task build && cd ../",
   "outputDirectory": "frontend/editor/dist",
   "installCommand": "npm install && npm install -g @go-task/cli"
 }
