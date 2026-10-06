@@ -1,4 +1,7 @@
 {
-  "buildCommand": "npm install --prefix frontend && npx vite build --root frontend/editor",
-  "outputDirectory": "frontend/editor/dist"
+  "buildCommand": "npm install --prefix frontend && npx vite build --root frontend/editor --mode proprietary",
+  "outputDirectory": "frontend/editor/dist",
+  "env": {
+    "VITE_CONNECTION_MODE": "saas"
+  }
 }
